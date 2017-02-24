@@ -1,0 +1,39 @@
+{
+  "name": "Proofing Tool",
+  "version": "0.1.0",
+  "manifest_version": 2,
+  "description": "Proofing Page Tool Extension",
+  "homepage_url": "http://themeforest.net",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "page": "src/bg/background.html",
+    "persistent": true
+  },
+  "permissions": [
+    "https://themeforest.net/admin/awesome_proofing/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://themeforest.net/admin/awesome_proofing/*"
+      ],
+      "css": [
+        "src/inject/inject.css"
+      ]
+    },
+    {
+      "matches": [
+        "https://themeforest.net/admin/awesome_proofing/*"
+      ],
+      "js": [
+        "js/jquery/jquery.min.js",
+        "src/inject/inject.js"
+      ]
+    }
+  ]
+}
