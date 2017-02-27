@@ -149,12 +149,17 @@ function makeListOfAttributes( list ) {
     return mappedList;
 }
 
+function getFirstWord(str) {
+  if (str.indexOf(' ') === -1)
+      return str;
+  else
+      return str.substr(0, str.indexOf(' '));
+};
+
 function highlightTags() {
   var compatibleOptions = $('#attribute_fields').find('select'),
       tags = $('#tags_tagsinput').find('span').not('.tag'),
       cats = $('select#category'),
-      tagsArr = [],
-      compatibleArr = [],
       compatibleList = makeListOfAttributes( compatibleOptions.children() ),
       tagsList = makeListOfAttributes( tags ),
       compatibleArr = _.uniq( compatibleList ),
@@ -171,15 +176,16 @@ function highlightTags() {
       var existingTags = _.uniq(compatibleAndTagsArr);
  
   tags.each( function(i, el) {
-      var str = el.innerText.replace(/\s+/g, '');
-      
-      for( var i = 0; i < existingTags.length; i++) {
-        if(str === existingTags[i]) {
-          $(el).parent().addClass('highlight');
+        var str = el.innerText.replace(/\s+/g, ''),
+            firstWord = getFirstWord(el.innerText);
+
+        for( var i = 0; i < existingTags.length; i++) {
+          if( ( str === existingTags[i] ) || ( firstWord === existingTags[i] ) ) {
+            $(el).parent().addClass('highlight');
+          }
         }
-      }
-      
-  });
+        
+    });
 }
 highlightTags();
 
