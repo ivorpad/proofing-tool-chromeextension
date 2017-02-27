@@ -1,3 +1,8 @@
 /**
  * Place your custom CSS styles here.
  **/
+
+div.tagsinput span.tag.highlight {
+  background: yellow !important;
+  border-color: darkkhaki !important;
+}

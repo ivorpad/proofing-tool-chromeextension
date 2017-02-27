@@ -98,12 +98,14 @@ setLocalStorage();
 
 function removeLocalStorage() {
   var url = $('.header-right-container').children('a').attr('href');
+
   $('.header-right-container').children('a').addClass('exit');
   
   $('.exit').on('click', function(e) {
-    var data = JSON.parse( localStorage.getItem('allItems') );
-    var downloadable_data;
-    var data_arr = [];
+    var data = JSON.parse( localStorage.getItem('allItems') ),
+    downloadable_data,
+    file_id = Math.random().toString(36).substr(2, 9),
+    data_arr = [];
     
     if(data !== null) {
         e.preventDefault();
@@ -123,7 +125,7 @@ function removeLocalStorage() {
     
     //console.log(data_arr);
     // TODO: file name should be `tf_review_report_` + date to find it easily.
-    console.save(data_arr.join('\n'), 'tf_review_report.txt');
+    console.save(data_arr.join('\n'), 'tf_review_report_' + file_id + '.txt');
     localStorage.removeItem('item');
     localStorage.removeItem('allItems');
     location.href = url;
@@ -131,5 +133,37 @@ function removeLocalStorage() {
 }
 removeLocalStorage();
 
+function makeListOfAttributes( list ) {
+    var mappedList = list.map(function() {
+      return $(this).text().toLowerCase().match(/^\s*([a-zA-Z0-9]+)/);
+    });
+
+    return mappedList;
+}
+
+function highlightTags() {
+  var compatibleOptions = $('#attribute_fields').find('select'),
+      tags = $('#tags_tagsinput').find('span').not('.tag'),
+      tagsArr = [],
+      compatibleArr = [],
+      compatibleList = makeListOfAttributes( compatibleOptions.children() ),
+      tagsList = makeListOfAttributes( tags ),
+      compatibleArr = _.uniq( compatibleList ),
+      tagsArr = _.uniq( tagsList ),
+      existingTags = _.intersection(compatibleArr, tagsArr);
+
+    
+  tags.each( function(i, el) {
+      var str = el.innerText.replace(/\s+/g, '');
+      
+      for( var i = 0; i < existingTags.length; i++) {
+        if(str === existingTags[i]) {
+          $(el).parent().addClass('highlight');
+        }
+      }
+      
+  });
+}
+highlightTags();
 
 })(jQuery);
