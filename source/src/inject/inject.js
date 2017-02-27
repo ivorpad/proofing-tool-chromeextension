@@ -134,25 +134,42 @@ function removeLocalStorage() {
 removeLocalStorage();
 
 function makeListOfAttributes( list ) {
-    var mappedList = list.map(function() {
+  var mappedList;
+  
+  if( list.is('select#category') ) {
+    mappedList = list.children().map(function() {
+    var str = $(this).text().replace(/\s+\-\s+/g,"");
+    return str.toLowerCase();
+    })
+  } else {
+    mappedList = list.map(function() {
       return $(this).text().toLowerCase().match(/^\s*([a-zA-Z0-9]+)/);
     });
-
+  }
     return mappedList;
 }
 
 function highlightTags() {
   var compatibleOptions = $('#attribute_fields').find('select'),
       tags = $('#tags_tagsinput').find('span').not('.tag'),
+      cats = $('select#category'),
       tagsArr = [],
       compatibleArr = [],
       compatibleList = makeListOfAttributes( compatibleOptions.children() ),
       tagsList = makeListOfAttributes( tags ),
       compatibleArr = _.uniq( compatibleList ),
       tagsArr = _.uniq( tagsList ),
-      existingTags = _.intersection(compatibleArr, tagsArr);
+      categoriesArr = makeListOfAttributes( cats ),
+      compatibleAndTagsArr = _.intersection(compatibleArr, tagsArr),
+      catsAndTagsArr = _.intersection(categoriesArr, tagsArr);
 
-    
+
+      for(var i = 0; i < catsAndTagsArr.length; i++) {
+        compatibleAndTagsArr.push(catsAndTagsArr[i]);
+      }
+
+      var existingTags = _.uniq(compatibleAndTagsArr);
+ 
   tags.each( function(i, el) {
       var str = el.innerText.replace(/\s+/g, '');
       
