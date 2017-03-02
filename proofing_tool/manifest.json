@@ -5,9 +5,9 @@
   "description": "Proofing Page Tool Extension",
   "homepage_url": "http://themeforest.net",
   "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
   },
   "default_locale": "en",
   "background": {
@@ -32,6 +32,7 @@
       ],
       "js": [
         "js/jquery/jquery.min.js",
+        "js/tags_input/jquery.tagsinput.min.js",
         "js/underscore/underscore-min.js",
         "src/inject/inject.js"
       ]

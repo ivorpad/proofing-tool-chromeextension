@@ -1,5 +1,5 @@
 (function(console){
-
+"use strict";
     console.save = function(data, filename){
 
         if(!data) {
@@ -26,6 +26,7 @@
 })(console)
 
 ;(function($) {
+"use strict";
     var _headerSpan = $('.admin-header').children('span.e-text-label');
 _headerSpan.after(' <span id="timer"> <time>00:00:00</time> </span> ');
 
@@ -151,12 +152,13 @@ function makeListOfAttributes( list ) {
 
 function getFirstWord(str) {
   if (str.indexOf(' ') === -1)
-      return str;
+    return str;
   else
-      return str.substr(0, str.indexOf(' '));
+    return str.substr(0, str.indexOf(' '));
 };
 
 function highlightTags() {
+
   var compatibleOptions = $('#attribute_fields').find('select'),
       tags = $('#tags_tagsinput').find('span').not('.tag'),
       cats = $('select#category'),
@@ -168,24 +170,45 @@ function highlightTags() {
       compatibleAndTagsArr = _.intersection(compatibleArr, tagsArr),
       catsAndTagsArr = _.intersection(categoriesArr, tagsArr);
 
+  
+  for(var i = 0; i < catsAndTagsArr.length; i++) {
+    compatibleAndTagsArr.push(catsAndTagsArr[i]);
+  }
 
-      for(var i = 0; i < catsAndTagsArr.length; i++) {
-        compatibleAndTagsArr.push(catsAndTagsArr[i]);
-      }
-
-      var existingTags = _.uniq(compatibleAndTagsArr);
+  var existingTags = _.uniq(compatibleAndTagsArr);
  
-  tags.each( function(i, el) {
-        var str = el.innerText.replace(/\s+/g, ''),
-            firstWord = getFirstWord(el.innerText);
+  var highlightOnRemove = function() {
+    findExistingTag();
+  }      
 
-        for( var i = 0; i < existingTags.length; i++) {
-          if( ( str === existingTags[i] ) || ( firstWord === existingTags[i] ) ) {
-            $(el).parent().addClass('highlight');
-          }
-        }
-        
-    });
+  $('#tags').tagsInput({
+   'height':'450px',
+   'width':'200px',
+   'interactive':true,
+   'defaultText':'add a tag',
+   'onRemoveTag':highlightOnRemove,
+  });
+
+  var findExistingTag = function() {
+    tags = $('#tags_tagsinput').find('span');
+    tags.each( function(index, el) {
+          var str = el.innerText.replace(/\s+/g, ''),
+              firstWord = getFirstWord(el.innerText),
+              that = $(this);
+          
+          for( var i = 0; i < existingTags.length; i++) {
+            if( ( str === existingTags[i] ) || ( firstWord === existingTags[i] ) ) {
+              $(el)
+                .parent()
+                .addClass('highlight');
+            }
+          }   
+          
+      });
+  }
+  
+  findExistingTag();
+
 }
 highlightTags();
 

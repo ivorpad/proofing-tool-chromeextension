@@ -6,3 +6,7 @@ div.tagsinput span.tag.highlight {
   background: yellow !important;
   border-color: darkkhaki !important;
 }
+
+#tags_tagsinput:last-child {
+  display:none !important;
+}
