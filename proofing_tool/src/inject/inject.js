@@ -29,7 +29,6 @@
 "use strict";
     var _headerSpan = $('.admin-header').children('span.e-text-label');
 _headerSpan.after(' <span id="timer"> <time>00:00:00</time> </span> ');
-
 var _timer = document.getElementById('timer') || '',
     seconds = 0, minutes = 0, hours = 0,
     t;
@@ -57,7 +56,6 @@ function timer() {
     t = setTimeout(add, 1000);
 }
 timer();
-
 
 function setLocalStorage() {
 var current_time,
@@ -211,5 +209,13 @@ function highlightTags() {
 
 }
 highlightTags();
+
+// invoking improveSelect on document.ready
+$(function() {
+  function improveSelect() {
+    $("#category").select2();
+  }
+  improveSelect();
+});
 
 })(jQuery);
