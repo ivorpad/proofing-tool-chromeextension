@@ -33,9 +33,6 @@
       ],
       "js": [
         "js/plugins.min.js",
-        // "js/select2/select2.full.min.js",
-        // "js/tags_input/jquery.tagsinput.min.js",
-        // "js/underscore/underscore-min.js",
         "src/inject/inject.js"
       ]
     }
