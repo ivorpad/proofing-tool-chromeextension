@@ -34,6 +34,8 @@ var _timer = document.getElementById('timer') || '',
     t;
 
 function add() {
+    var item_name = $('.existing-value.underlined').text();
+
     seconds++;
     if (seconds >= 60) {
         seconds = 0;
@@ -48,8 +50,25 @@ function add() {
     
     if ( _timer.textContent === '00:15:00' ) {
       $('#timer').css('color', 'red');
+
+
+      chrome.runtime.sendMessage({type: "notification", options: { 
+          type: "basic", 
+          iconUrl: chrome.extension.getURL("icons/48.png"),
+          title: "ThemeForest Proofing",
+          message: "An item is waiting for you.",
+          contextMessage: item_name,
+          buttons: [{
+                  title: "Get me there!",
+              }, {
+                  title: "Stay right here",
+          }],
+          requireInteraction: true
+      }
+    });
+
     }
-  
+
     timer();
 }
 function timer() {
@@ -219,3 +238,8 @@ $(function() {
 });
 
 })(jQuery);
+
+
+
+
+

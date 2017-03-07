@@ -1,13 +1,24 @@
-// if you checked "fancy-settings" in extensionizr.com, uncomment this lines
 
-// var settings = new Store("settings", {
-//     "sample_setting": "This is how you use Store.js to remember values"
-// });
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.type == "notification")
+      chrome.notifications.create('notification', request.options, function() {
+        // callback
+      });
+      
+    chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
+      var activeNotifications = {};
+      
+            if (btnIdx === 0) {
+                chrome.tabs.update(sender.tab.id, {active: true}, function() {});
+            } else if (btnIdx === 1) {
+                chrome.notifications.clear(notifId, function() {});
+            }
+      
+    });
 
+    chrome.notifications.onClicked.addListener(function(id) {
+      chrome.notifications.clear(id, function() {});
+    });
 
-//example of using a message handler from the inject scripts
-chrome.extension.onMessage.addListener(
-  function(request, sender, sendResponse) {
-  	chrome.pageAction.show(sender.tab.id);
     sendResponse();
-  });
+});
