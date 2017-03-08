@@ -1,7 +1,8 @@
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.type == "notification")
+    if (request.type == "notification" && sender.tab.selected === false) {
       chrome.notifications.create('notification', request.options, function() { });
+    }
       
     chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
       
