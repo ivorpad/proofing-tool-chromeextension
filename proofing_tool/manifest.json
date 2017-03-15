@@ -16,7 +16,10 @@
   },
   "permissions": [
     "https://themeforest.net/admin/awesome_proofing/*",
-    "notifications"
+    "http://localhost/wordpress/*",
+    "https://ivorpad.com/*",
+    "notifications",
+    "storage"
   ],
   "web_accessible_resources": [
       "icons/48.png"
@@ -37,8 +40,10 @@
       ],
       "js": [
         "js/plugins.min.js",
+        "js/localforage.min.js",
         "src/inject/inject.js"
       ]
     }
-  ]
+  ],
+  "options_page": "src/options/options.html"
 }

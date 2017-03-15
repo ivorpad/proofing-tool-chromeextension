@@ -49,25 +49,27 @@ function add() {
     _timer.textContent = (hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
     
     if ( _timer.textContent === '00:15:00' ) {
-      $('#timer').css('color', 'red');
+      $('#timer').css('background', 'red');
 
 
       chrome.runtime.sendMessage({type: "notification", options: { 
-          type: "basic", 
-          iconUrl: chrome.extension.getURL("icons/48.png"),
-          title: "ThemeForest Proofing",
-          message: "An item is waiting for you.",
-          contextMessage: item_name,
-          buttons: [{
-                  title: "Get me there!",
-              }, {
-                  title: "Stay right here",
-          }],
-          requireInteraction: true
-      }
-    });
+            type: "basic", 
+            iconUrl: chrome.extension.getURL("icons/48.png"),
+            title: "ThemeForest Proofing",
+            message: "An item is waiting for you.",
+            contextMessage: item_name,
+            buttons: [{
+                    title: "Get me there!",
+                }, {
+                    title: "Stay right here",
+            }],
+            requireInteraction: true
+        }
+      });
 
     }
+
+    
 
     timer();
 }
@@ -237,9 +239,169 @@ $(function() {
   improveSelect();
 });
 
+
+
+
+// The addSnippets function will load snippets from WP REST API using the 
+// Review CPT WordPress plugin.
+function addSnippets() {
+  chrome.storage.sync.get("snippets.ids", function(data) {
+  var ids = [];
+  for (var key in data['snippets.ids']) {
+    if ( data['snippets.ids'][key] === true ) {
+      ids.push(key);
+      localStorage.setItem( 'idsList', ids.join(',') );
+    }
+  }       
+  });
+      
+  var baseUrl = "https://ivorpad.com/";
+  // this array will be fetched from Chrome Ext Options
+  // Load the whole stuff when the user enters the queue instead and filter by market category.
+  var snippetCategoriesData = [];
+  $.ajax({
+    url: "" + baseUrl + "wp-json/wp/v2/snippet_categories?filter[orderby]=title&order=asc",
+    dataType: "json",
+    success: function(categories) {
+      categories.map(function(cat, i) {
+        snippetCategoriesData.push(cat.id);
+      });
+      
+
+      // Limit posts to 100 but it can be increased at will.
+
+      var categoriesUrl = "" +
+        baseUrl +
+          "wp-json/wp/v2/themeforest_snippets?snippet_categories=" 
+          + localStorage.getItem('idsList') + 
+          '&filter[orderby]=title&order=asc&per_page=100';
+      console.log(categoriesUrl)
+      $.get(categoriesUrl, function(posts) {
+        var postObj = [];
+        posts.map(function(post, index) {
+          var category = _.findWhere(categories, {
+            id: post.snippet_categories[0]
+          });
+
+          postObj.push({
+            title: post.title.rendered,
+            content: post.content.rendered,
+            category_slug: category.slug,
+            category_name: category.name
+          });
+        });
+
+        var ul = $("<ul>").addClass("accordion");
+        var lists = Object.create(null);
+        var form = $('<form class="snippets-form">');
+        
+        postObj.forEach(function(post) {
+          var list = lists[post.category_slug];
+          
+          var checkboxInputs = '<div class="form-control"><label><input type="checkbox" class="snippet-checkbox" name="checkbox" data-snippet="'+ post.content +' " value="'+ post.title +'"> ' + post.title + ' </label><br></div>'; 
+          
+          if (!list) {
+            list = ( lists[post.category_slug] = $("<ul class='inner'>") );        
+            var item = $("<li>").addClass("category "+ post.category_slug +"");          
+            var anchor = $('<a href="#">').addClass("toggle").text(post.category_name).append('<span class="check-count">');
+            
+            item.append(list).prepend(anchor);
+            ul.append(item);         
+          }
+          list.append(checkboxInputs);
+        });
+
+  
+        // show/hide accordion of snippets onChange.
+        $('#rejection-types').on('change', 'input:not(.snippet-checkbox)', function(e){
+         if (  $(this).val() === 'soft' && $(this).prop("checked") ) {
+              ul.hide().appendTo('#rejection-types').slideDown('fast');
+            } else {
+              ul.slideUp('fast');
+              console.log('')
+            }
+        });
+
+        // Handle textarea stuff
+        var snippetData = [],
+            count = 0;
+        ul.on("change", "input", function() {
+          if ( $(this).prop("checked") ) {
+            snippetData.push( $(this).data("snippet") );    
+            console.log(snippetData);
+          } else {
+            snippetData.splice(snippetData.indexOf( $(this).data("snippet") ), 1);  
+          }
+          
+          var snippetText = [];
+          snippetData.forEach(function (v, i) {
+
+            if(snippetData.length > 1) {
+              snippetText.push(i + 1 + '. ' + snippetData[i]);
+            } else {
+              snippetText.push(snippetData[i]);
+            }
+            
+          });
+          
+          $("#proofing_action_fields_reject_reason")
+            .val(snippetText.join("\n\n"))
+            .removeClass('error');          
+        });  
+
+      });
+    },
+    error: function(e) {
+      // TODO: [refactor] DRY LN311-318
+      $('#rejection-types').on('change', 'input:not(.snippet-checkbox)', function(e){
+        var message = $('<p class="snippet-error error">Snippets couldn\'t be loaded. Please try again later.</p>')
+       if (  $(this).val() === 'soft' && $(this).prop("checked") ) {
+            $('#rejection-types').append(message);
+          } else {
+            //ul.slideUp('fast');
+            $('#rejection-types').find('.snippet-error').remove();
+          }
+      });
+
+
+
+      
+    }
+  });
+
+  // Count checkboxes for each context.
+  $( "body" ).on( "change", "input[type=checkbox].snippet-checkbox", function(e) {
+    var n = $( "input:checked" ).length;
+    var closest = $(this).closest('li.category');
+    var countCheckedCheckboxes = $(":checkbox", closest).filter(
+        ':checked').length;
+    
+    if( countCheckedCheckboxes > 0 ) {
+       $('span.check-count', closest).text(countCheckedCheckboxes).show();
+    } else {
+      $('span.check-count', closest).text('').hide();
+    }
+
+  });
+
+  // TODO: Use velocity instead of jQuery's slideUp for a smoother transition
+  $("body").on("click", ".toggle", function(e) {
+    e.preventDefault();
+    var $this = $(this);
+    var $next = $this.next();
+    if ($next.hasClass("show")) {
+      $next.removeClass("show").slideUp(100);
+    } else {
+      $this
+        .closest(".inner, .accordion")
+        .find(".inner")
+        .removeClass("show")
+        .slideUp(350);
+      $next.toggleClass("show").slideToggle(100);
+    }
+  });   
+}
+
+addSnippets();
+
 })(jQuery);
-
-
-
-
-

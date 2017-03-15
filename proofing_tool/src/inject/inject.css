@@ -2,11 +2,90 @@
  * Place your custom CSS styles here.
  **/
 
+.accordion {
+  margin-top: 23px;
+}
+
 div.tagsinput span.tag.highlight {
   background: yellow !important;
   border-color: darkkhaki !important;
 }
 
+#proofing_action_fields_reject_reason.error {
+  padding: 10px;
+}
+
 #tags_tagsinput:last-child {
   display:none !important;
+}
+
+/* tag 0.3.6 */
+
+#timer {
+  background: #797979;
+  color: #f9f9f9;
+  font-size: 12px;
+  padding: 3px 5px;
+  border-radius: 3px;
+}
+
+#proofing_action_fields_reject_reason.error {
+  margin: 0;
+}
+
+#proofing_action_fields_reject_reason-error {
+  display: none !important;
+}
+
+ul .inner {
+  padding-left: 1em;
+  overflow: hidden;
+  display: none;
+  padding-top: 10px;
+}
+
+ul li a.toggle {
+  width: 100%;
+  display: block;
+  color: #fefefe;
+  padding: .75em;
+  border-radius: 0.15em;
+  transition: background .3s ease;
+  
+  margin-bottom: 10px;
+  background: #c7c7c7;
+  color: inherit;
+  box-shadow: 0px 0px 0px 1px rgba(10,10,10,.07) inset;
+}
+ul li a.toggle:hover {
+  background: #b9b9b9;
+  text-decoration: none;
+}
+
+ul li a.toggle:focus,
+ul li a.toggle:active {
+  text-decoration: none;
+}
+
+li.category {
+  list-style: none;
+}
+
+.form-control label {
+  cursor: pointer;
+}
+
+.check-count {
+  float: right;
+  font-size: 10px;
+  padding: 3px 7px 5px 7px;
+  border-radius: 100%;
+  height: 20px;
+  display: inline-block;
+  width: 20px;
+  display: none;
+
+  background: grey;
+  color: white;
+  margin-top: 0px;
 }
