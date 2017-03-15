@@ -15,8 +15,12 @@ div.tagsinput span.tag.highlight {
   padding: 10px;
 }
 
-#tags_tagsinput:last-child {
+.remove_tags {
   display:none !important;
+}
+
+#tags_tagsinput:last-child {
+  
 }
 
 /* tag 0.3.6 */

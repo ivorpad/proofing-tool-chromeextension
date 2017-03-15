@@ -28,10 +28,13 @@
 ;(function($) {
 "use strict";
     var _headerSpan = $('.admin-header').children('span.e-text-label');
-_headerSpan.after(' <span id="timer"> <time>00:00:00</time> </span> ');
-var _timer = document.getElementById('timer') || '',
-    seconds = 0, minutes = 0, hours = 0,
-    t;
+    _headerSpan.after(' <span id="timer"> <time>00:00:00</time> </span> ');
+    
+    var _timer = document.getElementById('timer') || '',
+        seconds = 0, 
+        minutes = 0, 
+        hours = 0,
+        t;
 
 function add() {
     var item_name = $('.existing-value.underlined').text();
@@ -69,50 +72,49 @@ function add() {
 
     }
 
-    
-
     timer();
 }
+
 function timer() {
     t = setTimeout(add, 1000);
 }
 timer();
 
 function setLocalStorage() {
-var current_time,
- data = [],
- all_items = [],
- item_url = $('.submission-details').children('a').attr('href') || '',
- item_name = $('.existing-value.underlined').text(),
- approve_button = $('fieldset#approve').children('button'),
- reject_button = $('fieldset#reject').children('button'),
- item_url_arr = item_url.split('/'),
- item_id = item_url_arr[ item_url_arr.length - 1 ],
- action,
- existing_items;
+  var current_time,
+   data = [],
+   all_items = [],
+   item_url = $('.submission-details').children('a').attr('href') || '',
+   item_name = $('.existing-value.underlined').text(),
+   approve_button = $('fieldset#approve').children('button'),
+   reject_button = $('fieldset#reject').children('button'),
+   item_url_arr = item_url.split('/'),
+   item_id = item_url_arr[ item_url_arr.length - 1 ],
+   action,
+   existing_items;
 
-$('button.e-btn--3d.-color-primary, button.e-btn--3d.-color-destructive').on('click', function(e) {
-    
-    if( $(this).is('.e-btn--3d.-color-primary.-size-l.-width-full') ) {
-       if( $('#item_item_attributes_attributes_5_select_value').val() === 'Unrated' ) { 
-            alert('Documentation cannot be unrated');
-            return false;
-        }
-    }
-    
-    e.stopPropagation();
-    
-    action = $(this).is(approve_button) ? 'approved' : 'rejected';
-    
-    // TODO: Set currentState of timer with localStorage to avoid starting from 0 if the page reloads.
-    current_time = $("#timer").text();
-    existing_items = JSON.parse( localStorage.getItem('allItems') ) || [];
-    data.push( { id: item_id, item_url: item_url, item_name: item_name, current_time: current_time, action: action } );
-    localStorage.setItem('item', JSON.stringify( data ));
-    existing_items.push( data );
-    localStorage.setItem('allItems', JSON.stringify(existing_items));
-    console.log(existing_items);
-});
+  $('button.e-btn--3d.-color-primary, button.e-btn--3d.-color-destructive').on('click', function(e) {
+      
+      if( $(this).is('.e-btn--3d.-color-primary.-size-l.-width-full') ) {
+         if( $('#item_item_attributes_attributes_5_select_value').val() === 'Unrated' ) { 
+              alert('Documentation cannot be unrated');
+              return false;
+          }
+      }
+      
+      e.stopPropagation();
+      
+      action = $(this).is(approve_button) ? 'approved' : 'rejected';
+      
+      // TODO: Set currentState of timer with storage to avoid starting from 0 if the page reloads.
+      current_time = $("#timer").text();
+      existing_items = JSON.parse( localStorage.getItem('allItems') ) || [];
+      data.push( { id: item_id, item_url: item_url, item_name: item_name, current_time: current_time, action: action } );
+      localStorage.setItem('item', JSON.stringify( data ));
+      existing_items.push( data );
+      localStorage.setItem('allItems', JSON.stringify(existing_items));
+      //console.log(existing_items);
+  });
 }
 setLocalStorage();
 
@@ -143,7 +145,6 @@ function removeLocalStorage() {
           }
     }
     
-    //console.log(data_arr);
     // TODO: file name should be `tf_review_report_` + date to find it easily.
     console.save(data_arr.join('\n'), 'tf_review_report_' + file_id + '.txt');
     localStorage.removeItem('item');
@@ -178,56 +179,63 @@ function getFirstWord(str) {
 
 function highlightTags() {
 
-  var compatibleOptions = $('#attribute_fields').find('select'),
-      tags = $('#tags_tagsinput').find('span').not('.tag'),
-      cats = $('select#category'),
-      compatibleList = makeListOfAttributes( compatibleOptions.children() ),
-      tagsList = makeListOfAttributes( tags ),
-      compatibleArr = _.uniq( compatibleList ),
-      tagsArr = _.uniq( tagsList ),
-      categoriesArr = makeListOfAttributes( cats ),
-      compatibleAndTagsArr = _.intersection(compatibleArr, tagsArr),
-      catsAndTagsArr = _.intersection(categoriesArr, tagsArr);
 
-  
-  for(var i = 0; i < catsAndTagsArr.length; i++) {
-    compatibleAndTagsArr.push(catsAndTagsArr[i]);
-  }
+  chrome.storage.sync.get('general.disable_tag_filter', function(data) {
+    if(data['general.disable_tag_filter'] === false) {
 
-  var existingTags = _.uniq(compatibleAndTagsArr);
- 
-  var highlightOnRemove = function() {
-    findExistingTag();
-  }      
+      $('#tags_tagsinput:last-child').addClass('remove_tags');
 
-  $('#tags').tagsInput({
-   'height':'450px',
-   'width':'200px',
-   'interactive':true,
-   'defaultText':'add a tag',
-   'onRemoveTag':highlightOnRemove,
+      var compatibleOptions = $('#attribute_fields').find('select'),
+            tags = $('#tags_tagsinput').find('span').not('.tag'),
+            cats = $('select#category'),
+            compatibleList = makeListOfAttributes( compatibleOptions.children() ),
+            tagsList = makeListOfAttributes( tags ),
+            compatibleArr = _.uniq( compatibleList ),
+            tagsArr = _.uniq( tagsList ),
+            categoriesArr = makeListOfAttributes( cats ),
+            compatibleAndTagsArr = _.intersection(compatibleArr, tagsArr),
+            catsAndTagsArr = _.intersection(categoriesArr, tagsArr);
+
+        
+        for(var i = 0; i < catsAndTagsArr.length; i++) {
+          compatibleAndTagsArr.push(catsAndTagsArr[i]);
+        }
+
+        var existingTags = _.uniq(compatibleAndTagsArr);
+       
+        var highlightOnRemove = function() {
+          findExistingTag();
+        }
+
+        $('#tags').tagsInput({
+         'height': 'auto',
+         'width':'180px',
+         'interactive':true,
+         'defaultText':'add a tag',
+         'onRemoveTag':highlightOnRemove,
+        });
+
+        var findExistingTag = function() {
+          tags = $('#tags_tagsinput').find('span');
+          tags.each( function(index, el) {
+                var str = el.innerText.replace(/\s+/g, ''),
+                    firstWord = getFirstWord(el.innerText),
+                    that = $(this);
+                
+                for( var i = 0; i < existingTags.length; i++) {
+                  if( ( str === existingTags[i] ) || ( firstWord === existingTags[i] ) ) {
+                    $(el)
+                      .parent()
+                      .addClass('highlight');
+                  }
+                }   
+                
+            });
+        }
+        
+        findExistingTag();
+    }
   });
-
-  var findExistingTag = function() {
-    tags = $('#tags_tagsinput').find('span');
-    tags.each( function(index, el) {
-          var str = el.innerText.replace(/\s+/g, ''),
-              firstWord = getFirstWord(el.innerText),
-              that = $(this);
-          
-          for( var i = 0; i < existingTags.length; i++) {
-            if( ( str === existingTags[i] ) || ( firstWord === existingTags[i] ) ) {
-              $(el)
-                .parent()
-                .addClass('highlight');
-            }
-          }   
-          
-      });
-  }
-  
-  findExistingTag();
-
 }
 highlightTags();
 
@@ -256,9 +264,10 @@ function addSnippets() {
   });
       
   var baseUrl = "https://ivorpad.com/";
-  // this array will be fetched from Chrome Ext Options
+  // this array will be fetched from Chrome Options
   // Load the whole stuff when the user enters the queue instead and filter by market category.
   var snippetCategoriesData = [];
+
   $.ajax({
     url: "" + baseUrl + "wp-json/wp/v2/snippet_categories?filter[orderby]=title&order=asc",
     dataType: "json",
@@ -268,14 +277,15 @@ function addSnippets() {
       });
       
 
-      // Limit posts to 100 but it can be increased at will.
+      // Limit posts to 100 but it can be increased at will because I've removed
+      // the limit with a filter in the plugin.
 
       var categoriesUrl = "" +
         baseUrl +
           "wp-json/wp/v2/themeforest_snippets?snippet_categories=" 
           + localStorage.getItem('idsList') + 
           '&filter[orderby]=title&order=asc&per_page=100';
-      console.log(categoriesUrl)
+      //console.log(categoriesUrl)
       $.get(categoriesUrl, function(posts) {
         var postObj = [];
         posts.map(function(post, index) {
@@ -318,7 +328,7 @@ function addSnippets() {
               ul.hide().appendTo('#rejection-types').slideDown('fast');
             } else {
               ul.slideUp('fast');
-              console.log('')
+              //console.log('')
             }
         });
 
@@ -328,7 +338,7 @@ function addSnippets() {
         ul.on("change", "input", function() {
           if ( $(this).prop("checked") ) {
             snippetData.push( $(this).data("snippet") );    
-            console.log(snippetData);
+            //console.log(snippetData);
           } else {
             snippetData.splice(snippetData.indexOf( $(this).data("snippet") ), 1);  
           }
@@ -351,27 +361,31 @@ function addSnippets() {
 
       });
     },
-    error: function(e) {
-      // TODO: [refactor] DRY LN311-318
-      $('#rejection-types').on('change', 'input:not(.snippet-checkbox)', function(e){
-        var message = $('<p class="snippet-error error">Snippets couldn\'t be loaded. Please try again later.</p>')
-       if (  $(this).val() === 'soft' && $(this).prop("checked") ) {
-            $('#rejection-types').append(message);
-          } else {
-            //ul.slideUp('fast');
-            $('#rejection-types').find('.snippet-error').remove();
-          }
+    beforeSend: function(xhr, opts) {
+      chrome.storage.sync.get('general.disable_snippets', function(data) {
+        if (data['general.disable_snippets'] === true) {
+          xhr.abort()
+        }
       });
-
-
-
-      
+    },
+    error: function(e) {
+      if( ! e.statusText === 'abort' ) {
+        // TODO: [refactor] DRY LN311-318
+        $('#rejection-types').on('change', 'input:not(.snippet-checkbox)', function(e){
+          var message = $('<p class="snippet-error error">Snippets couldn\'t be loaded. Please try again later.</p>')
+         if (  $(this).val() === 'soft' && $(this).prop("checked") ) {
+              $('#rejection-types').append(message);
+            } else {
+              //ul.slideUp('fast');
+              $('#rejection-types').find('.snippet-error').remove();
+            }
+        });
+      }
     }
   });
 
   // Count checkboxes for each context.
   $( "body" ).on( "change", "input[type=checkbox].snippet-checkbox", function(e) {
-    var n = $( "input:checked" ).length;
     var closest = $(this).closest('li.category');
     var countCheckedCheckboxes = $(":checkbox", closest).filter(
         ':checked').length;
