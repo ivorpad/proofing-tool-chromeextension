@@ -405,8 +405,9 @@
         });
       },
       beforeSend: function(xhr, opts) {
-        chrome.storage.sync.get('general.disable_snippets', function(data) {
+        chrome.storage.sync.get('general.enable_snippets', function(data) {
           if (data['general.enable_snippets'] === false) {
+            console.log(data)
             xhr.abort();
           }
         });

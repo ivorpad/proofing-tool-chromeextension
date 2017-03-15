@@ -11,7 +11,7 @@ $(function() {
     
     // this array will be fetched from Chrome Ext Options
     // Load the whole stuff when the user enters the queue instead and filter by market category.
-    var snippetCategoriesData = [];
+    //var snippetCategoriesData = [];
 
 
   $.ajax({
@@ -19,8 +19,9 @@ $(function() {
     dataType: 'json',
     success: function(categories) {
         var snippetsObj = [];
+
         categories.map(function(cat , i){
-            snippetCategoriesData.push(cat.id);
+            //snippetCategoriesData.push(cat.id);
             snippetsObj.push( { name: cat.id, type: 'checkbox', desc: cat.name } );
         });
       
