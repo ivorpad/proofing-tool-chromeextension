@@ -406,7 +406,7 @@
       },
       beforeSend: function(xhr, opts) {
         chrome.storage.sync.get('general.disable_snippets', function(data) {
-          if (data['general.disable_snippets'] === true) {
+          if (data['general.enable_snippets'] === false) {
             xhr.abort();
           }
         });
