@@ -12,7 +12,7 @@
       data = JSON.stringify(data, undefined, 4);
     }
 
-    var blob = new Blob([data], { type: 'text/json' }),
+    let blob = new Blob([data], { type: 'text/json' }),
       e = document.createEvent('MouseEvents'),
       a = document.createElement('a');
 
@@ -41,17 +41,17 @@
 })(console);
 (function($) {
   'use strict';
-  var _headerSpan = $('.admin-header').children('span.e-text-label');
+  let _headerSpan = $('.admin-header').children('span.e-text-label');
   _headerSpan.after(' <span id="timer"> <time>00:00:00</time> </span> ');
 
-  var _timer = document.getElementById('timer') || '',
+  let _timer = document.getElementById('timer') || '',
     seconds = 0,
     minutes = 0,
     hours = 0,
     t;
 
   function add() {
-    var item_name = $('.existing-value.underlined').text();
+    let item_name = $('.existing-value.underlined').text();
 
     seconds++;
     if (seconds >= 60) {
@@ -102,7 +102,7 @@
   timer();
 
   function setLocalStorage() {
-    var current_time,
+    let current_time,
       data = [],
       all_items = [],
       item_url = $('.submission-details').children('a').attr('href') || '',
@@ -150,19 +150,19 @@
   setLocalStorage();
 
   function removeLocalStorage() {
-    var url = $('.header-right-container').children('a').attr('href');
+    let url = $('.header-right-container').children('a').attr('href');
 
     $('.header-right-container').children('a').addClass('exit');
 
     $('.exit').on('click', function(e) {
-      var data = JSON.parse(localStorage.getItem('allItems')),
+      let data = JSON.parse(localStorage.getItem('allItems')),
         downloadable_data,
         file_id = Math.random().toString(36).substr(2, 9),
         data_arr = [];
 
       if (data !== null) {
         e.preventDefault();
-        for (var i = 0; i < data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
           downloadable_data = i +
             ' — ' +
             ' Name: ' +
@@ -198,11 +198,11 @@
   removeLocalStorage();
 
   function makeListOfAttributes(list) {
-    var mappedList;
+    let mappedList;
 
     if (list.is('select#category')) {
       mappedList = list.children().map(function() {
-        var str = $(this).text().replace(/\s+\-\s+/g, '');
+        let str = $(this).text().replace(/\s+\-\s+/g, '');
         return str.toLowerCase();
       });
     } else {
@@ -223,7 +223,7 @@
       if (data['general.disable_tag_filter'] === false) {
         $('#tags_tagsinput:last-child').addClass('remove_tags');
 
-        var compatibleOptions = $('#attribute_fields').find('select'),
+        let compatibleOptions = $('#attribute_fields').find('select'),
           tags = $('#tags_tagsinput').find('span').not('.tag'),
           cats = $('select#category'),
           compatibleList = makeListOfAttributes(compatibleOptions.children()),
@@ -234,13 +234,13 @@
           compatibleAndTagsArr = _.intersection(compatibleArr, tagsArr),
           catsAndTagsArr = _.intersection(categoriesArr, tagsArr);
 
-        for (var i = 0; i < catsAndTagsArr.length; i++) {
+        for (let i = 0; i < catsAndTagsArr.length; i++) {
           compatibleAndTagsArr.push(catsAndTagsArr[i]);
         }
 
-        var existingTags = _.uniq(compatibleAndTagsArr);
+        let existingTags = _.uniq(compatibleAndTagsArr);
 
-        var highlightOnRemove = function() {
+        let highlightOnRemove = function() {
           findExistingTag();
         };
 
@@ -252,14 +252,14 @@
           onRemoveTag: highlightOnRemove,
         });
 
-        var findExistingTag = function() {
+        let findExistingTag = function() {
           tags = $('#tags_tagsinput').find('span');
           tags.each(function(index, el) {
-            var str = el.innerText.replace(/\s+/g, ''),
+            let str = el.innerText.replace(/\s+/g, ''),
               firstWord = getFirstWord(el.innerText),
               that = $(this);
 
-            for (var i = 0; i < existingTags.length; i++) {
+            for (let i = 0; i < existingTags.length; i++) {
               if (str === existingTags[i] || firstWord === existingTags[i]) {
                 $(el).parent().addClass('highlight');
               }
@@ -285,8 +285,8 @@
   // Review CPT WordPress plugin.
   function addSnippets() {
     chrome.storage.sync.get('snippets.ids', function(data) {
-      var ids = [];
-      for (var key in data['snippets.ids']) {
+      let ids = [];
+      for (let key in data['snippets.ids']) {
         if (data['snippets.ids'][key] === true) {
           ids.push(key);
           localStorage.setItem('idsList', ids.join(','));
@@ -294,10 +294,10 @@
       }
     });
 
-    var baseUrl = 'https://ivorpad.com/';
+    let baseUrl = 'https://ivorpad.com/';
     // this array will be fetched from Chrome Options
     // Load the whole stuff when the user enters the queue instead and filter by market category.
-    var snippetCategoriesData = [];
+    let snippetCategoriesData = [];
 
     $.ajax({
       url: '' +
@@ -312,16 +312,16 @@
         // Limit posts to 100 but it can be increased at will because I've removed
         // the limit with a filter in the plugin.
 
-        var categoriesUrl = '' +
+        let categoriesUrl = '' +
           baseUrl +
           'wp-json/wp/v2/themeforest_snippets?snippet_categories=' +
           localStorage.getItem('idsList') +
           '&filter[orderby]=title&order=asc&per_page=100';
         //console.log(categoriesUrl)
         $.get(categoriesUrl, function(posts) {
-          var postObj = [];
+          let postObj = [];
           posts.map(function(post, index) {
-            var category = _.findWhere(categories, {
+            let category = _.findWhere(categories, {
               id: post.snippet_categories[0],
             });
 
@@ -333,14 +333,14 @@
             });
           });
 
-          var ul = $('<ul>').addClass('accordion');
-          var lists = Object.create(null);
-          var form = $('<form class="snippets-form">');
+          let ul = $('<ul>').addClass('accordion');
+          let lists = Object.create(null);
+          let form = $('<form class="snippets-form">');
 
           postObj.forEach(function(post) {
-            var list = lists[post.category_slug];
+            let list = lists[post.category_slug];
 
-            var checkboxInputs = '<div class="form-control"><label><input type="checkbox" class="snippet-checkbox" name="checkbox" data-snippet="' +
+            let checkboxInputs = '<div class="form-control"><label><input type="checkbox" class="snippet-checkbox" name="checkbox" data-snippet="' +
               post.content +
               ' " value="' +
               post.title +
@@ -350,10 +350,10 @@
 
             if (!list) {
               list = (lists[post.category_slug] = $("<ul class='inner'>"));
-              var item = $('<li>').addClass(
+              let item = $('<li>').addClass(
                 'category ' + post.category_slug + ''
               );
-              var anchor = $('<a href="#">')
+              let anchor = $('<a href="#">')
                 .addClass('toggle')
                 .text(post.category_name)
                 .append('<span class="check-count">');
@@ -377,7 +377,7 @@
           });
 
           // Handle textarea stuff
-          var snippetData = [], count = 0;
+          let snippetData = [], count = 0;
           ul.on('change', 'input', function() {
             if ($(this).prop('checked')) {
               snippetData.push($(this).data('snippet'));
@@ -389,7 +389,7 @@
               );
             }
 
-            var snippetText = [];
+            let snippetText = [];
             snippetData.forEach(function(v, i) {
               if (snippetData.length > 1) {
                 snippetText.push(i + 1 + '. ' + snippetData[i]);
@@ -418,7 +418,7 @@
           $(
             '#rejection-types'
           ).on('change', 'input:not(.snippet-checkbox)', function(e) {
-            var message = $(
+            let message = $(
               '<p class="snippet-error error">Snippets couldn\'t be loaded. Please try again later.</p>'
             );
             if ($(this).val() === 'soft' && $(this).prop('checked')) {
@@ -436,8 +436,8 @@
     $(
       'body'
     ).on('change', 'input[type=checkbox].snippet-checkbox', function(e) {
-      var closest = $(this).closest('li.category');
-      var countCheckedCheckboxes = $(':checkbox', closest).filter(
+      let closest = $(this).closest('li.category');
+      let countCheckedCheckboxes = $(':checkbox', closest).filter(
         ':checked'
       ).length;
 
@@ -451,8 +451,8 @@
     // TODO: Use velocity instead of jQuery's slideUp for a smoother transition
     $('body').on('click', '.toggle', function(e) {
       e.preventDefault();
-      var $this = $(this);
-      var $next = $this.next();
+      let $this = $(this);
+      let $next = $this.next();
       if ($next.hasClass('show')) {
         $next.removeClass('show').slideUp(100);
       } else {

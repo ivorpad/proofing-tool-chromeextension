@@ -6,29 +6,26 @@ chrome.options.addTab('General', [
 
 $(function() {
   "use strict";
-  var baseUrl = 'https://ivorpad.com/';
+  const baseUrl = 'https://ivorpad.com/';
 
     
     // this array will be fetched from Chrome Ext Options
     // Load the whole stuff when the user enters the queue instead and filter by market category.
-    //var snippetCategoriesData = [];
 
 
   $.ajax({
     url: '' +baseUrl+ 'wp-json/wp/v2/snippet_categories',
     dataType: 'json',
     success: function(categories) {
-        var snippetsObj = [];
-
+        let snippetsObj = [];
         categories.map(function(cat , i){
-            //snippetCategoriesData.push(cat.id);
             snippetsObj.push( { name: cat.id, type: 'checkbox', desc: cat.name } );
         });
       
       // Remove 'Uncategorized' category.
-        for (var i = 0; i < snippetsObj.length; i++) {
+        for (let i = 0; i < snippetsObj.length; i++) {
           if ( snippetsObj[i].hasOwnProperty('desc') && snippetsObj[i].desc === 'Uncategorized' ) {
-            var index = snippetsObj.indexOf( snippetsObj[i] );
+            const index = snippetsObj.indexOf( snippetsObj[i] );
             snippetsObj.splice(index, 1);
           }
         }
