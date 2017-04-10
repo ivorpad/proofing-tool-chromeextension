@@ -20,7 +20,7 @@ div.tagsinput span.tag.highlight {
 }
 
 #tags_tagsinput:last-child {
-  
+
 }
 
 /* tag 0.3.6 */
@@ -55,7 +55,7 @@ ul li a.toggle {
   padding: .75em;
   border-radius: 0.15em;
   transition: background .3s ease;
-  
+
   margin-bottom: 10px;
   background: #c7c7c7;
   color: inherit;
@@ -92,4 +92,13 @@ li.category {
   background: grey;
   color: white;
   margin-top: 0px;
+}
+
+/** User Notes **/
+#user-notes .post-avatar__badges {
+  display: none;
+}
+
+#user-notes .note {
+  clear: both;
 }

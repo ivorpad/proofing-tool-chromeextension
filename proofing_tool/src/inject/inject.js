@@ -124,9 +124,9 @@ function setLocalStorage() {
     existing_items;
 
   $('button.e-btn--3d.-color-primary, button.e-btn--3d.-color-destructive').on('click', function(e) {
-    
+
     if ( $(this).is('.e-btn--3d.-color-primary.-size-l.-width-full')) {
-      
+
       if ($('#item_item_attributes_attributes_5_select_value').val() === 'Unrated' ) {
         alert('Documentation cannot be unrated');
         return false;
@@ -134,7 +134,7 @@ function setLocalStorage() {
     }
 
     e.stopPropagation();
-    
+
 
     action = $(this).is(approve_button) ? 'approved' : 'rejected';
 
@@ -250,6 +250,53 @@ function highlightTags() {
 
       var existingTags = _.uniq(compatibleAndTagsArr);
 
+  function userNotes() {
+
+    // Get the users notes page
+    var envatoMarket = 'https://themeforest.net/user/',
+        userID = $('a[title="author profile page"]').text(),
+        userNotesPage = envatoMarket + userID + '/notes',
+
+        // Create our new request
+        xhr = new XMLHttpRequest();
+
+    // Add a div for the notes displayed
+    $( ".sidebar-proofing" ).append( '<h3>User Notes</h3><div id="user-notes"></div>' );
+
+    // Open the user's notes page
+    xhr.open( 'GET', userNotesPage, true);
+
+    xhr.onreadystatechange = function() {
+
+      // Check for a successful response
+      if( xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200 ) {
+
+        var response = xhr.responseText;
+        var notes = $( response ).find( 'h2.underlined' ).nextUntil( '.page-controls' );
+
+        // Loop through the returned data object
+        for ( var key in notes ){
+          if( typeof( notes[key].innerHTML) != 'undefined' ){
+            // Display each note
+            $('#user-notes').append('<div class="note">' + notes[key].innerHTML + '</div>');
+          }
+        }
+
+      }
+    };
+    xhr.send();
+
+  }
+  userNotes();
+
+  // invoking improveSelect on document.ready
+  $(function() {
+    function improveSelect() {
+      $('#category').select2();
+    }
+    improveSelect();
+  });
+
       var highlightOnRemove = function() {
         findExistingTag();
       };
@@ -289,7 +336,7 @@ $(function() {
   function improveSelect() {
     $('#category').select2();
   }
- // invoking improveSelect on document.ready 
+ // invoking improveSelect on document.ready
   improveSelect();
 });
 
