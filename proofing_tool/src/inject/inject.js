@@ -252,16 +252,17 @@ function highlightTags() {
 
   function userNotes() {
 
-    // Get the users notes page
     var envatoMarket = 'https://themeforest.net/user/',
         userID = $('a[title="author profile page"]').text(),
-        userNotesPage = envatoMarket + userID + '/notes',
 
-        // Cache DOM element
-        proofingSidebar = $( ".sidebar-proofing" ),
+    // Construct the user's notes page
+    userNotesPage = envatoMarket + userID + '/notes',
 
-        // Create our new request
-        xhr = new XMLHttpRequest();
+    // Cache DOM element
+    proofingSidebar = $( ".sidebar-proofing" ),
+
+    // Create our new request
+    xhr = new XMLHttpRequest();
 
     // Add a div for the notes displayed
     proofingSidebar.append( '<h3>User Notes</h3><div id="user-notes"></div>' );
@@ -277,11 +278,12 @@ function highlightTags() {
         var response = xhr.responseText,
             notes = $( response ).find( 'h2.underlined' ).nextUntil( '.page-controls' ),
 
-            // Cache DOM element
-            userNotesWrap = $('#user-notes');
+        // Cache DOM element
+        userNotesWrap = $('#user-notes');
 
         // Loop through the returned data object
         for ( var key in notes ){
+
           if( typeof( notes[key].innerHTML) != 'undefined' ){
 
             // Limits number of notes shown and display button to user notes page
