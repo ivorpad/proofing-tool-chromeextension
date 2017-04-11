@@ -277,8 +277,14 @@ function highlightTags() {
         // Loop through the returned data object
         for ( var key in notes ){
           if( typeof( notes[key].innerHTML) != 'undefined' ){
-            // Display each note
-            $('#user-notes').append('<div class="note">' + notes[key].innerHTML + '</div>');
+
+            // Limits number of notes shown and display button to user notes page
+            if( key == 5 ){
+              $('#user-notes').append('<a class ="e-btn" href="'  + userNotesPage + '" target="_blank">View More User Notes</a>');
+            } else {
+              $('#user-notes').append('<div class="note">' + notes[key].innerHTML + '</div>');
+            }
+
           }
         }
 
