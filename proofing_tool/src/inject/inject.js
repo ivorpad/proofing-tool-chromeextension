@@ -257,11 +257,14 @@ function highlightTags() {
         userID = $('a[title="author profile page"]').text(),
         userNotesPage = envatoMarket + userID + '/notes',
 
+        // Cache DOM element
+        proofingSidebar = $( ".sidebar-proofing" ),
+
         // Create our new request
         xhr = new XMLHttpRequest();
 
     // Add a div for the notes displayed
-    $( ".sidebar-proofing" ).append( '<h3>User Notes</h3><div id="user-notes"></div>' );
+    proofingSidebar.append( '<h3>User Notes</h3><div id="user-notes"></div>' );
 
     // Open the user's notes page
     xhr.open( 'GET', userNotesPage, true);
@@ -271,8 +274,11 @@ function highlightTags() {
       // Check for a successful response
       if( xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200 ) {
 
-        var response = xhr.responseText;
-        var notes = $( response ).find( 'h2.underlined' ).nextUntil( '.page-controls' );
+        var response = xhr.responseText,
+            notes = $( response ).find( 'h2.underlined' ).nextUntil( '.page-controls' ),
+
+            // Cache DOM element
+            userNotesWrap = $('#user-notes');
 
         // Loop through the returned data object
         for ( var key in notes ){
@@ -280,9 +286,9 @@ function highlightTags() {
 
             // Limits number of notes shown and display button to user notes page
             if( key == 5 ){
-              $('#user-notes').append('<a class ="e-btn" href="'  + userNotesPage + '" target="_blank">View More User Notes</a>');
+              userNotesWrap.append('<a class ="e-btn" href="'  + userNotesPage + '" target="_blank">View More User Notes</a>');
             } else {
-              $('#user-notes').append('<div class="note">' + notes[key].innerHTML + '</div>');
+              userNotesWrap.append('<div class="note">' + notes[key].innerHTML + '</div>');
             }
 
           }
