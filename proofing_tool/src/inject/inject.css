@@ -95,13 +95,21 @@ li.category {
 }
 
 /** User Notes **/
-#user-notes .post-avatar__badges {
+#user-notes .user-post__poster {
   display: none;
 }
 
 #user-notes .note {
   clear: both;
-  display: block;
+  display: inline-block;
+  width: 500px;
+  word-break: break-all;
+  word-wrap: break-word;
+  margin-bottom: 1em;
+}
+
+#user-notes .note:last-child {
+  display: none;
 }
 
 #user-notes a.e-btn {
