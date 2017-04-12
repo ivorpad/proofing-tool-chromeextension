@@ -293,14 +293,11 @@ function checkPreviewSize() {
       width = img.width(),
       height = img.height();
   
-      img.prepend('<span>hello</span>');
-
   if( width !== 590 || height !== 300 ) {
     img.parents('.item-preview').prepend('<span class="incorrect"><i class="e-icon -icon-cancel -margin-left"></i> '+ width +'w &times; '+height+'h. Should be 590w &times; 300h</span>');
   } else {
     img.parents('.item-preview').prepend('<span class="correct"><i class="e-icon -icon-ok -margin-left"></i> '+ width +'w &times; '+height+'h</span>');
   }
-
 }
 
 function userNotes() {
