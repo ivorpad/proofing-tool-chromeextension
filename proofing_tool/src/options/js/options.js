@@ -2,6 +2,7 @@ chrome.options.opts.about = 'This is my about page :)';
 chrome.options.addTab('General', [
   { name: 'enable_snippets', desc: 'Enable Dynamic Snippets' },
   { name: 'disable_tag_filter', desc: 'Disable Tag Filter' },
+  { name: 'disable_user_notes', desc: 'Disable User Notes'}
 ]);
 
 $(function() {

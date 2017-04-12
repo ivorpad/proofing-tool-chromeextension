@@ -306,7 +306,7 @@ function userNotes() {
   xhr = new XMLHttpRequest();
 
   // Add a div for the notes displayed
-  proofingSidebar.append( '<h3>User Notes</h3><div id="user-notes"></div>' );
+  proofingSidebar.append( '<div class="user-notes-container"><h3>User Notes</h3><div id="user-notes"></div></div>' );
 
   // Open the user's notes page
   xhr.open( 'GET', userNotesPage, true);
@@ -318,19 +318,18 @@ function userNotes() {
 
       var response = xhr.responseText,
           notes = $( response ).find( 'h2.underlined' ).nextUntil( '.page-controls' ),
-
-      // Cache DOM element
-      userNotesWrap = $('#user-notes');
-
+          userNotesWrap = $('#user-notes');
+      
+      
       // Loop through the returned data object
       for ( var key in notes ){
 
-        if( typeof( notes[key].innerHTML) != 'undefined' ){
+        if( typeof( notes[key] ) !== 'undefined' ){
 
           // Limits number of notes shown and display button to user notes page
           if( key == 5 ){
             userNotesWrap.append('<a class ="e-btn" href="'  + userNotesPage + '" target="_blank">View More User Notes</a>');
-          } else {
+          }  else if( key < 5 ) {
             userNotesWrap.append('<div class="note">' + notes[key].innerHTML + '</div>');
           }
 
@@ -342,7 +341,12 @@ function userNotes() {
   xhr.send();
 
 }
-userNotes();
+
+chrome.storage.sync.get('general.disable_user_notes', function(val) {
+  if ( val['general.disable_user_notes'] === false ) {
+    userNotes();
+  }
+});
 
 // This plugin improves the `category` select list on the proofing page
 // It adds a search box to find categories easily

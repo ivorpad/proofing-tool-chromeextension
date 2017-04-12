@@ -118,3 +118,7 @@ li.category {
   color: white;
   margin: 1em 0;
 }
+
+.user-notes-container {
+  clear: both;
+}
