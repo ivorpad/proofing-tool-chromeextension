@@ -124,9 +124,9 @@ function setLocalStorage() {
     existing_items;
 
   $('button.e-btn--3d.-color-primary, button.e-btn--3d.-color-destructive').on('click', function(e) {
-    
+
     if ( $(this).is('.e-btn--3d.-color-primary.-size-l.-width-full')) {
-      
+
       if ($('#item_item_attributes_attributes_5_select_value').val() === 'Unrated' ) {
         alert('Documentation cannot be unrated');
         return false;
@@ -134,7 +134,7 @@ function setLocalStorage() {
     }
 
     e.stopPropagation();
-    
+
 
     action = $(this).is(approve_button) ? 'approved' : 'rejected';
 
@@ -250,6 +250,14 @@ function highlightTags() {
 
       var existingTags = _.uniq(compatibleAndTagsArr);
 
+  // invoking improveSelect on document.ready
+  $(function() {
+    function improveSelect() {
+      $('#category').select2();
+    }
+    improveSelect();
+  });
+
       var highlightOnRemove = function() {
         findExistingTag();
       };
@@ -283,13 +291,66 @@ function highlightTags() {
 }
 highlightTags();
 
+function userNotes() {
+
+  var envatoMarket = 'https://themeforest.net/user/',
+      userID = $('a[title="author profile page"]').text(),
+
+  // Construct the user's notes page
+  userNotesPage = envatoMarket + userID + '/notes',
+
+  // Cache DOM element
+  proofingSidebar = $( ".sidebar-proofing" ),
+
+  // Create our new request
+  xhr = new XMLHttpRequest();
+
+  // Add a div for the notes displayed
+  proofingSidebar.append( '<h3>User Notes</h3><div id="user-notes"></div>' );
+
+  // Open the user's notes page
+  xhr.open( 'GET', userNotesPage, true);
+
+  xhr.onreadystatechange = function() {
+
+    // Check for a successful response
+    if( xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200 ) {
+
+      var response = xhr.responseText,
+          notes = $( response ).find( 'h2.underlined' ).nextUntil( '.page-controls' ),
+
+      // Cache DOM element
+      userNotesWrap = $('#user-notes');
+
+      // Loop through the returned data object
+      for ( var key in notes ){
+
+        if( typeof( notes[key].innerHTML) != 'undefined' ){
+
+          // Limits number of notes shown and display button to user notes page
+          if( key == 5 ){
+            userNotesWrap.append('<a class ="e-btn" href="'  + userNotesPage + '" target="_blank">View More User Notes</a>');
+          } else {
+            userNotesWrap.append('<div class="note">' + notes[key].innerHTML + '</div>');
+          }
+
+        }
+      }
+
+    }
+  };
+  xhr.send();
+
+}
+userNotes();
+
 // This plugin improves the `category` select list on the proofing page
 // It adds a search box to find categories easily
 $(function() {
   function improveSelect() {
     $('#category').select2();
   }
- // invoking improveSelect on document.ready 
+ // invoking improveSelect on document.ready
   improveSelect();
 });
 
