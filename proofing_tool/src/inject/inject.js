@@ -325,12 +325,12 @@ function userNotes() {
       // Loop through the returned data object
       for ( var key in notes ){
 
-        if( typeof( notes[key].innerHTML) != 'undefined' ){
+        if( typeof( notes[key].innerHTML) !== 'undefined' ){
 
           // Limits number of notes shown and display button to user notes page
           if( key == 5 ){
             userNotesWrap.append('<a class ="e-btn" href="'  + userNotesPage + '" target="_blank">View More User Notes</a>');
-          } else {
+          } else if( key < 5 ){
             userNotesWrap.append('<div class="note">' + notes[key].innerHTML + '</div>');
           }
 
