@@ -122,3 +122,21 @@ li.category {
 .user-notes-container {
   clear: both;
 }
+
+.item-preview > a {
+  display: block;
+}
+
+.item-preview span {
+  display: block;
+}
+
+.item-preview .correct {
+  background: #82b440;
+  color: white;
+}
+
+.item-preview .incorrect {
+  background: #df2c2c;
+  color: white;
+}

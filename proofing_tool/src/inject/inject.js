@@ -227,6 +227,10 @@ function getFirstWord(str) {
   else return str.substr(0, str.indexOf(' '));
 }
 
+function improveSelect() {
+  $('#category').select2();
+}
+
 // Highlight tags that require reviewer's attention
 function highlightTags() {
   chrome.storage.sync.get('general.disable_tag_filter', function(data) {
@@ -249,14 +253,6 @@ function highlightTags() {
       }
 
       var existingTags = _.uniq(compatibleAndTagsArr);
-
-  // invoking improveSelect on document.ready
-  $(function() {
-    function improveSelect() {
-      $('#category').select2();
-    }
-    improveSelect();
-  });
 
       var highlightOnRemove = function() {
         findExistingTag();
@@ -290,6 +286,22 @@ function highlightTags() {
   });
 }
 highlightTags();
+
+function checkPreviewSize() {
+  
+  var img = $('.item-preview').find('img'),
+      width = img.width(),
+      height = img.height();
+  
+      img.prepend('<span>hello</span>');
+
+  if( width !== 590 || height !== 300 ) {
+    img.parents('.item-preview').prepend('<span class="incorrect"><i class="e-icon -icon-cancel -margin-left"></i> '+ width +'w &times; '+height+'h. Should be 590w &times; 300h</span>');
+  } else {
+    img.parents('.item-preview').prepend('<span class="correct"><i class="e-icon -icon-ok -margin-left"></i> '+ width +'w &times; '+height+'h</span>');
+  }
+
+}
 
 function userNotes() {
 
@@ -350,13 +362,9 @@ chrome.storage.sync.get('general.disable_user_notes', function(val) {
 
 // This plugin improves the `category` select list on the proofing page
 // It adds a search box to find categories easily
-$(function() {
-  function improveSelect() {
-    $('#category').select2();
-  }
- // invoking improveSelect on document.ready
-  improveSelect();
-});
+function improveSelect() {
+  $('#category').select2();
+}
 
 // The addSnippets function will load snippets from WP REST API using the
 // Review CPT WordPress plugin. https://github.com/ivorpad/review-cpt
@@ -530,4 +538,11 @@ function addSnippets() {
 }
 
 addSnippets();
+
+// document.ready
+$(function() {
+  checkPreviewSize();
+  improveSelect();
+});
+
 })(jQuery);
