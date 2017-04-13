@@ -1,6 +1,3 @@
-/**
- * Place your custom CSS styles here.
- **/
 
 .accordion {
   margin-top: 23px;
@@ -26,14 +23,6 @@ div.tagsinput span.tag.highlight {
 .proofing-body a.logo {
   display: none;
 }
-
-/*#timer {
-  background: #797979;
-  color: #f9f9f9;
-  font-size: 12px;
-  padding: 3px 5px;
-  border-radius: 3px;
-}*/
 
 #proofing_action_fields_reject_reason.error {
   margin: 0;

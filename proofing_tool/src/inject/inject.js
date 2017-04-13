@@ -79,7 +79,7 @@ function add() {
       'color': 'white'
     });
 
-    // If 15 have passed and the reviewer is in another tab, it'll receive a notification.
+    // If 15 minutes have passed and the reviewer is in another tab a nice Chrome Notification will be displayed.
     chrome.runtime.sendMessage({
       type: 'notification',
       options: {
