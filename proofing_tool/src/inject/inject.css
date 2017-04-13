@@ -23,15 +23,17 @@ div.tagsinput span.tag.highlight {
 
 }
 
-/* tag 0.3.6 */
+.proofing-body a.logo {
+  display: none;
+}
 
-#timer {
+/*#timer {
   background: #797979;
   color: #f9f9f9;
   font-size: 12px;
   padding: 3px 5px;
   border-radius: 3px;
-}
+}*/
 
 #proofing_action_fields_reject_reason.error {
   margin: 0;

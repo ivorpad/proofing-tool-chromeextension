@@ -45,7 +45,7 @@ console.save = function(data, filename) {
 'use strict';
 
 var headerSpan = $('.admin-header').children('span.e-text-label');
-headerSpan.after(' <span id="timer"> <time>00:00:00</time> </span> ');
+headerSpan.after(' <span id="timer" class="e-text-label -color-grey-light"> <time>00:00:00</time> </span> ');
 
 var _timer = document.getElementById('timer') || '',
   seconds = 0,
@@ -74,7 +74,10 @@ function add() {
     (seconds > 9 ? seconds : '0' + seconds);
 
   if (_timer.textContent === '00:15:00') {
-    $('#timer').css('background', 'red');
+    $('#timer').css({
+      'background': 'red',
+      'color': 'white'
+    });
 
     // If 15 have passed and the reviewer is in another tab, it'll receive a notification.
     chrome.runtime.sendMessage({
@@ -535,6 +538,21 @@ function addSnippets() {
 }
 
 addSnippets();
+
+function changeTopBarUrl() {
+  // get logo and item id
+  var logo = $('.logo'),
+      itemId = $('#last_skipped_entry_id').val();
+
+  // if the URL is /admin/awesome_proofing/{item_id} then change the URL to https://themeforest.net/admin/awesome_proofing/
+  // instead of themeforest.net
+  if( window.location.pathname === "/admin/awesome_proofing/" + itemId ) {
+    logo.after('<a href="'+ logo.context.origin +'/admin/awesome_proofing">Back to Proofing Queue</a>');
+  } else {
+    $('.logo').css('display', 'block');
+  }
+}
+changeTopBarUrl();
 
 // document.ready
 $(function() {
