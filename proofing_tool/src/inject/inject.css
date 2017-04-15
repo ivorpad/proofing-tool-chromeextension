@@ -131,3 +131,7 @@ li.category {
   background: #df2c2c;
   color: white;
 }
+
+.incorrect > b {
+  font-weight: bold;
+}

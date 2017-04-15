@@ -297,9 +297,9 @@ function checkPreviewSize() {
       height = img.height();
   
   if( width !== 590 || height !== 300 ) {
-    img.parents('.item-preview').prepend('<span class="incorrect"><i class="e-icon -icon-cancel -margin-left"></i> '+ width +'w &times; '+height+'h. Should be 590w &times; 300h</span>');
+    img.parents('.item-preview').prepend('<span class="incorrect"><i class="e-icon -icon-cancel -margin-left"></i> <b>Wrong Size:</b> '+ width +'px &times; '+height+'px. Should be 590px &times; 300px.</span>');
   } else {
-    img.parents('.item-preview').prepend('<span class="correct"><i class="e-icon -icon-ok -margin-left"></i> '+ width +'w &times; '+height+'h</span>');
+    img.parents('.item-preview').prepend('<span class="correct"><i class="e-icon -icon-ok -margin-left"></i> '+ width +'px &times; '+height+'px.</span>');
   }
 }
 
