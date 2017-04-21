@@ -557,7 +557,6 @@ var proofingApp = {
     this.addSnippets();
     this.changeTopBarUrl();
     this.toggleUserNotes();
-    
   }
     
 }
