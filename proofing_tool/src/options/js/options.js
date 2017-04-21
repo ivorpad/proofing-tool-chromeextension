@@ -1,4 +1,4 @@
-chrome.options.opts.about = 'This is my about page :)';
+chrome.options.opts.about = 'This un-official tool was made by Ivor Padilla for ThemeForest to increase Reviewers\' productivity.';
 chrome.options.addTab('General', [
   { name: 'enable_snippets', desc: 'Enable Dynamic Snippets' },
   { name: 'disable_tag_filter', desc: 'Disable Tag Filter' },
