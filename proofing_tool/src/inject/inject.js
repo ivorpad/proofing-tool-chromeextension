@@ -11,11 +11,11 @@ var proofingApp = {
    Timer
    --------------------------------------------- */  
   timer: function() {
-    var headerSpan = $('.admin-header').children('span.e-text-label');
+    const headerSpan = $('.admin-header').children('span.e-text-label');
     headerSpan
       .after(' <span id="timer" class="e-text-label -color-grey-light"> <time>00:00:00</time> </span> ');
     
-    var _timer = document.getElementById('timer') || '',
+    let _timer = document.getElementById('timer') || undefined,
     seconds = 0,
     minutes = 0,
     hours = 0,
@@ -33,40 +33,44 @@ var proofingApp = {
           hours++;
         }
       }
-
+    //console.log( typeof _timer !== "undefined" );
+    if( typeof _timer !== "undefined" ) {
       _timer.textContent = (hours ? hours > 9 ? hours : '0' + hours : '00') +
         ':' +
         (minutes ? minutes > 9 ? minutes : '0' + minutes : '00') +
         ':' +
         (seconds > 9 ? seconds : '0' + seconds);
 
-      if (_timer.textContent === '00:15:00') {
-        $('#timer').css({
-          'background': 'red',
-          'color': 'white'
-        });
+    }
+      
+      
+    if (typeof _timer !== "undefined" && _timer.textContent === '00:15:00') {
+      $('#timer').css({
+        'background': 'red',
+        'color': 'white'
+      });
 
-        // If 15 minutes have passed and the reviewer is in another tab a nice Chrome Notification will be displayed.
-        chrome.runtime.sendMessage({
-          type: 'notification',
-          options: {
-            type: 'basic',
-            iconUrl: chrome.extension.getURL('icons/48.png'),
-            title: 'ThemeForest Proofing',
-            message: 'An item is waiting for you.',
-            contextMessage: item_name,
-            buttons: [
-              {
-                title: 'Get me there!',
-              },
-              {
-                title: 'Stay right here',
-              },
-            ],
-            requireInteraction: true,
-          },
-        });
-      }
+      // If 15 minutes have passed and the reviewer is in another tab a nice Chrome Notification will be displayed.
+      chrome.runtime.sendMessage({
+        type: 'notification',
+        options: {
+          type: 'basic',
+          iconUrl: chrome.extension.getURL('icons/48.png'),
+          title: 'ThemeForest Proofing',
+          message: 'An item is waiting for you.',
+          contextMessage: item_name,
+          buttons: [
+            {
+              title: 'Get me there!',
+            },
+            {
+              title: 'Stay right here',
+            },
+          ],
+          requireInteraction: true,
+        },
+      });
+    }
 
       timer();
     }
@@ -85,7 +89,7 @@ var proofingApp = {
    export it later to a txt file.
    --------------------------------------------- */
   setLocalStorage: function() {
-    var current_time,
+    let current_time,
       data = [],
       all_items = [],
       item_url = $('.submission-details').children('a').attr('href') || '',
@@ -135,7 +139,7 @@ var proofingApp = {
    Clears localStorage data when the reviewer clicks 'exit queue'
    --------------------------------------------- */
   removeLocalStorage: function() {
-    var url = $('.header-right-container').children('a').attr('href');
+    const url = $('.header-right-container').children('a').attr('href');
 
     $('.header-right-container').children('a').addClass('exit');
 
@@ -187,7 +191,7 @@ var proofingApp = {
    Making a list of attributes to compare
    --------------------------------------------- */
   makeListOfAttributes: function(list) {
-    var mappedList;
+    let mappedList;
 
     if (list.is('select#category')) {
       mappedList = list.children().map(function() {
@@ -221,24 +225,26 @@ var proofingApp = {
       if (data['general.disable_tag_filter'] === false) {
         $('#tags_tagsinput:last-child').addClass('remove_tags');
 
-        var compatibleOptions = $('#attribute_fields').find('select'),
-          tags = $('#tags_tagsinput').find('span').not('.tag'),
-          cats = $('select#category'),
-          compatibleList = makeListOfAttributes(compatibleOptions.children()),
-          tagsList = makeListOfAttributes(tags),
-          compatibleArr = _.uniq(compatibleList),
-          tagsArr = _.uniq(tagsList),
-          categoriesArr = makeListOfAttributes(cats),
-          compatibleAndTagsArr = _.intersection(compatibleArr, tagsArr),
-          catsAndTagsArr = _.intersection(categoriesArr, tagsArr);
+        const compatibleOptions = $('#attribute_fields').find('select'),
+              tags = $('#tags_tagsinput').find('span').not('.tag'),
+              cats = $('select#category');
 
-        for (var i = 0; i < catsAndTagsArr.length; i++) {
+
+        let compatibleList = makeListOfAttributes(compatibleOptions.children()),
+            tagsList = makeListOfAttributes(tags),
+            compatibleArr = _.uniq(compatibleList),
+            tagsArr = _.uniq(tagsList),
+            categoriesArr = makeListOfAttributes(cats),
+            compatibleAndTagsArr = _.intersection(compatibleArr, tagsArr),
+            catsAndTagsArr = _.intersection(categoriesArr, tagsArr);
+
+        for (let i = 0; i < catsAndTagsArr.length; i++) {
           compatibleAndTagsArr.push(catsAndTagsArr[i]);
         }
 
-        var existingTags = _.uniq(compatibleAndTagsArr);
+        const existingTags = _.uniq(compatibleAndTagsArr);
 
-        var highlightOnRemove = function() {
+        const highlightOnRemove = function() {
           findExistingTag();
         };
 
@@ -250,7 +256,7 @@ var proofingApp = {
           onRemoveTag: highlightOnRemove,
         });
 
-        var findExistingTag = function() {
+        let findExistingTag = function() {
           tags = $('#tags_tagsinput').find('span');
           tags.each(function(index, el) {
             var str = el.innerText.replace(/\s+/g, ''),
@@ -286,7 +292,7 @@ var proofingApp = {
    --------------------------------------------- */
 
   checkPreviewSize: function() {
-    var img = $('.item-preview').find('img'),
+    const img = $('.item-preview').find('img'),
         width = img.width(),
         height = img.height();
     
@@ -298,7 +304,7 @@ var proofingApp = {
   },
 
   userNotes: function() {
-    var envatoMarket = 'https://themeforest.net/user/',
+    const envatoMarket = 'https://themeforest.net/user/',
         userID = $('a[title="author profile page"]').text(),
 
     // Construct the user's notes page
@@ -321,13 +327,13 @@ var proofingApp = {
       // Check for a successful response
       if( xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200 ) {
 
-        var response = xhr.responseText,
+        const response = xhr.responseText,
             notes = $( response ).find( 'h2.underlined' ).nextUntil( '.page-controls' ),
             userNotesWrap = $('#user-notes');
         
         
         // Loop through the returned data object
-        for ( var key in notes ){
+        for ( let key in notes ){
 
           if( typeof( notes[key] ) !== 'undefined' ){
 
@@ -355,8 +361,8 @@ var proofingApp = {
    --------------------------------------------- */
   addSnippets: function() {
     chrome.storage.sync.get('snippets.ids', function(data) {
-      var ids = [];
-      for (var key in data['snippets.ids']) {
+      let ids = [];
+      for (let key in data['snippets.ids']) {
         if (data['snippets.ids'][key] === true) {
           ids.push(key);
           localStorage.setItem('idsList', ids.join(','));
@@ -364,13 +370,12 @@ var proofingApp = {
       }
     });
 
-    var baseUrl = 'https://ivorpad.com/',
-        snippetCategoriesData = [];
+    const baseUrl = 'https://ivorpad.com/';
+    
+    let snippetCategoriesData = [];
 
     $.ajax({
-      url: '' +
-        baseUrl +
-        'wp-json/wp/v2/snippet_categories?filter[orderby]=title&order=asc',
+      url: baseUrl + 'wp-json/wp/v2/snippet_categories?filter[orderby]=title&order=asc',
       dataType: 'json',
       success: function(categories) {
         categories.map(function(cat, i) {
@@ -379,15 +384,15 @@ var proofingApp = {
 
         // Limit posts to 100 but it can be increased manually
         // I've removed the limit with a filter in the WP plugin.
-        var categoriesUrl = '' +
+        const categoriesUrl = '' +
           baseUrl +
           'wp-json/wp/v2/themeforest_snippets?snippet_categories=' +
           localStorage.getItem('idsList') +
           '&filter[orderby]=title&order=asc&per_page=100';
         $.get(categoriesUrl, function(posts) {
-          var postObj = [];
+          let postObj = [];
           posts.map(function(post, index) {
-            var category = _.findWhere(categories, {
+            const category = _.findWhere(categories, {
               id: post.snippet_categories[0],
             });
 
@@ -399,14 +404,14 @@ var proofingApp = {
             });
           });
 
-          var ul = $('<ul>').addClass('accordion');
-          var lists = Object.create(null);
-          var form = $('<form class="snippets-form">');
+          const ul = $('<ul>').addClass('accordion'),
+                lists = Object.create(null),
+                form = $('<form class="snippets-form">');
 
           postObj.forEach(function(post) {
-            var list = lists[post.category_slug];
+            let list = lists[post.category_slug];
 
-            var checkboxInputs = '<div class="form-control"><label><input type="checkbox" class="snippet-checkbox" name="checkbox" data-snippet="' +
+            let checkboxInputs = '<div class="form-control"><label><input type="checkbox" class="snippet-checkbox" name="checkbox" data-snippet="' +
               post.content +
               ' " value="' +
               post.title +
@@ -416,10 +421,10 @@ var proofingApp = {
 
             if (!list) {
               list = (lists[post.category_slug] = $("<ul class='inner'>"));
-              var item = $('<li>').addClass(
+              let item = $('<li>').addClass(
                 'category ' + post.category_slug + ''
               );
-              var anchor = $('<a href="#">')
+              const anchor = $('<a href="#">')
                 .addClass('toggle')
                 .text(post.category_name)
                 .append('<span class="check-count">');
@@ -440,7 +445,7 @@ var proofingApp = {
           });
 
           // Handle textarea stuff
-          var snippetData = [], count = 0;
+          let snippetData = [], count = 0;
           ul.on('change', 'input', function() {
             if ($(this).prop('checked')) {
               snippetData.push($(this).data('snippet'));
@@ -451,7 +456,7 @@ var proofingApp = {
               );
             }
 
-            var snippetText = [];
+            let snippetText = [];
             snippetData.forEach(function(v, i) {
               if (snippetData.length > 1) {
                 snippetText.push(i + 1 + '. ' + snippetData[i]);
@@ -476,7 +481,7 @@ var proofingApp = {
       error: function(e) {
         if (!e.statusText === 'abort') {
           $('#rejection-types').on('change', 'input:not(.snippet-checkbox)', function(e) {
-            var message = $(
+            const message = $(
               '<p class="snippet-error error">Snippets couldn\'t be loaded. Please try again later.</p>'
             );
             if ($(this).val() === 'soft' && $(this).prop('checked')) {
@@ -492,8 +497,8 @@ var proofingApp = {
 
     // Count checkboxes for each snippet category.
     $('body').on('change', 'input[type=checkbox].snippet-checkbox', function(e) {
-      var closest = $(this).closest('li.category');
-      var countCheckedCheckboxes = $(':checkbox', closest)
+      const closest = $(this).closest('li.category');
+      const countCheckedCheckboxes = $(':checkbox', closest)
                                         .filter(':checked')
                                         .length;
 
@@ -507,8 +512,8 @@ var proofingApp = {
     // TODO: Use velocity instead of jQuery's slideUp for a smoother transition
     $('body').on('click', '.toggle', function(e) {
       e.preventDefault();
-      var $this = $(this);
-      var $next = $this.next();
+      let $this = $(this);
+      const $next = $this.next();
       if ($next.hasClass('show')) {
         $next.removeClass('show').slideUp(100);
       } else {
@@ -524,7 +529,7 @@ var proofingApp = {
 
   changeTopBarUrl: function() {
     // get logo and item id
-    var logo = $('.logo'),
+    const logo = $('.logo'),
         itemId = $('#last_skipped_entry_id').val();
 
     // if the URL is /admin/awesome_proofing/{item_id} then change the URL to https://themeforest.net/admin/awesome_proofing/
