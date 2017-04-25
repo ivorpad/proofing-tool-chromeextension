@@ -209,29 +209,21 @@ let proofingApp = {
   },
 
 
-  
-  /* ---------------------------------------------
-   Helper: getFirstWord
-   --------------------------------------------- */
-  // getFirstWord: function(str) {
-  //   if (str.indexOf(' ') === -1) return str;
-  //   else return str.substr(0, str.indexOf(' '));
-  // },
-
   /* ---------------------------------------------
    Highlight Duplicated Tags
    --------------------------------------------- */
-  highlightTags: function() {
-    //chrome.storage.sync.get('general.disable_tag_filter', function(data) {
-    //if (data['general.disable_tag_filter'] === false) {
-    //}
-    //});  
-    //
+  highlightTags: function() { 
         $('#tags_tagsinput:last-child').addClass('remove_tags');
 
         const compatibleOptions = $('#attribute_fields').find('select'),
               cats = $('select#category');    
-        
+
+        /* ---------------------------------------------
+         Helper: getFirstWord
+
+         @param {str} String to pass to the function
+         @return {str} First word of a sentence
+         --------------------------------------------- */
         function getFirstWord(str) {
           if (str.indexOf(' ') === -1) return str;
           else return str.substr(0, str.indexOf(' '));
@@ -548,13 +540,13 @@ let proofingApp = {
     }
   },
 
-  toggleUserNotes: function() {
-    chrome.storage.sync.get('general.disable_user_notes', function(val) {
-      if ( val['general.disable_user_notes'] === false ) {
-        this.userNotes();
-      }
-    }.bind(this));
-  },
+toggleSetting: function(setting, fn) {
+  chrome.storage.sync.get(setting, function(data) {
+    if ( data[setting] === false ) {
+      fn();
+    }
+  }.bind(this));
+},
 
   domReadyUtilities: function() {
       this.checkPreviewSize();
@@ -565,12 +557,11 @@ let proofingApp = {
     this.timer();
     this.setLocalStorage();
     this.removeLocalStorage();
-    this.highlightTags();
     this.addSnippets();
     this.changeTopBarUrl();
-    this.toggleUserNotes();
-  }
-    
+    this.toggleSetting('general.disable_user_notes', this.userNotes);
+    this.toggleSetting('general.disable_tag_filter', this.highlightTags.bind(this));
+  }    
 }
 
 // Init the app.
