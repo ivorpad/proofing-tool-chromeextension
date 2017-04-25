@@ -5,7 +5,7 @@
 ;(function($) {
 'use strict';
 
-var proofingApp = {
+let proofingApp = {
 
   /* ---------------------------------------------
    Timer
@@ -22,7 +22,7 @@ var proofingApp = {
     t;
     
     function add() {
-      var item_name = $('.existing-value.underlined').text();
+      const item_name = $('.existing-value.underlined').text();
 
       seconds++;
       if (seconds >= 60) {
@@ -144,14 +144,16 @@ var proofingApp = {
     $('.header-right-container').children('a').addClass('exit');
 
     $('.exit').on('click', function(e) {
-      var data = JSON.parse(localStorage.getItem('allItems')),
+      let data = JSON.parse(localStorage.getItem('allItems')),
         downloadable_data,
-        file_id = Math.random().toString(36).substr(2, 9),
         data_arr = [];
+        
+      const file_id = Math.random().toString(36).substr(2, 9);
+        
 
       if (data !== null) {
         e.preventDefault();
-        for (var i = 0; i < data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
           downloadable_data = i +
             ' — ' +
             ' Name: ' +
@@ -195,7 +197,7 @@ var proofingApp = {
 
     if (list.is('select#category')) {
       mappedList = list.children().map(function() {
-        var str = $(this).text().replace(/\s+\-\s+/g, '');
+        let str = $(this).text().replace(/\s+\-\s+/g, '');
         return str.toLowerCase();
       });
     } else {
@@ -211,30 +213,36 @@ var proofingApp = {
   /* ---------------------------------------------
    Helper: getFirstWord
    --------------------------------------------- */
-  getFirstWord: function(str) {
-    if (str.indexOf(' ') === -1) return str;
-    else return str.substr(0, str.indexOf(' '));
-  },
-
+  // getFirstWord: function(str) {
+  //   if (str.indexOf(' ') === -1) return str;
+  //   else return str.substr(0, str.indexOf(' '));
+  // },
 
   /* ---------------------------------------------
    Highlight Duplicated Tags
    --------------------------------------------- */
   highlightTags: function() {
-    chrome.storage.sync.get('general.disable_tag_filter', function(data) {
-      if (data['general.disable_tag_filter'] === false) {
+    //chrome.storage.sync.get('general.disable_tag_filter', function(data) {
+    //if (data['general.disable_tag_filter'] === false) {
+    //}
+    //});  
+    //
         $('#tags_tagsinput:last-child').addClass('remove_tags');
 
         const compatibleOptions = $('#attribute_fields').find('select'),
-              tags = $('#tags_tagsinput').find('span').not('.tag'),
-              cats = $('select#category');
+              cats = $('select#category');    
+        
+        function getFirstWord(str) {
+          if (str.indexOf(' ') === -1) return str;
+          else return str.substr(0, str.indexOf(' '));
+        }
 
-
-        let compatibleList = makeListOfAttributes(compatibleOptions.children()),
-            tagsList = makeListOfAttributes(tags),
+        let compatibleList = this.makeListOfAttributes(compatibleOptions.children()),
+            tags = $('#tags_tagsinput').find('span').not('.tag'),
+            tagsList = this.makeListOfAttributes(tags),
             compatibleArr = _.uniq(compatibleList),
             tagsArr = _.uniq(tagsList),
-            categoriesArr = makeListOfAttributes(cats),
+            categoriesArr = this.makeListOfAttributes(cats),
             compatibleAndTagsArr = _.intersection(compatibleArr, tagsArr),
             catsAndTagsArr = _.intersection(categoriesArr, tagsArr);
 
@@ -255,15 +263,16 @@ var proofingApp = {
           defaultText: 'add a tag',
           onRemoveTag: highlightOnRemove,
         });
+        
 
         let findExistingTag = function() {
           tags = $('#tags_tagsinput').find('span');
           tags.each(function(index, el) {
-            var str = el.innerText.replace(/\s+/g, ''),
-              firstWord = getFirstWord(el.innerText),
-              that = $(this);
+            const str = el.innerText.replace(/\s+/g, ''),
+              firstWord = getFirstWord(el.innerText);
+              
 
-            for (var i = 0; i < existingTags.length; i++) {
+            for (let i = 0; i < existingTags.length; i++) {
               if (str === existingTags[i] || firstWord === existingTags[i]) {
                 $(el).parent().addClass('highlight');
               }
@@ -272,8 +281,6 @@ var proofingApp = {
         };
 
         findExistingTag();
-      }
-    });
   },
   
   /* ---------------------------------------------
