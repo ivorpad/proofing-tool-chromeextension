@@ -5,7 +5,7 @@
 ;(function($) {
 'use strict';
 
-let proofingApp = {
+const proofingApp = {
 
   /* ---------------------------------------------
    Timer
