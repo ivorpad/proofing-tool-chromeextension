@@ -540,13 +540,13 @@ let proofingApp = {
     }
   },
 
-toggleSetting: function(setting, fn) {
-  chrome.storage.sync.get(setting, function(data) {
-    if ( data[setting] === false ) {
-      fn();
-    }
-  }.bind(this));
-},
+  toggleSetting: function(setting, fn) {
+    chrome.storage.sync.get(setting, function(data) {
+      if ( data[setting] === false ) {
+        fn();
+      }
+    }.bind(this));
+  },
 
   domReadyUtilities: function() {
       this.checkPreviewSize();
